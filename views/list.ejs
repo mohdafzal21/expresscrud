@@ -1,0 +1,7 @@
+<% for(var i=0;i<restaurant.length; i++ ){ %>
+<li>
+<%= restaurant[i].name%>
+    <a href="/restaurants/<%= restaurant[i]._id%>">Book Order</a>
+</li>
+
+<% }%>

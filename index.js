@@ -1,13 +1,15 @@
 const express = require('express');
 
 const bodyParser = require('body-parser');
-
+var methodOverride = require('method-override')
 const restaurantRoutes = require('./routes/restaurant');
 const app = express();
 
 //body parser middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true}));
+// override with POST having ?_method=DELETE
+app.use(methodOverride('_method'))
 
 
 //express static files
@@ -24,6 +26,7 @@ app.get('/', function(req,res){
 
 /// api routes
 app.use('/restaurants', restaurantRoutes);
+
 
 
 

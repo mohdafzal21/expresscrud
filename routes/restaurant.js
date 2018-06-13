@@ -2,25 +2,26 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models');
 
-
-
-
+router.get('/form', function(req,res){
+   // show user form to create a new restaurant
+   res.render('newRestaurant');
+});
 
 router.get('/', function(req,res){
-    db.Restaurant.find(function (err,data) {
-        if(err){
+    db.Restaurant.find()
+        .then(function(restaurant){
+            res.render('list', {restaurant: restaurant});
+        })
+        .catch(function(err){
             console.log(err);
-        }else{
-            res.render('home',{data:data});
-        }
-    })
+        })
 
 });
 
 router.post('/', function(req,res){
     db.Restaurant.create(req.body)
          .then(function(newRestaurant){
-             res.json(newRestaurant)
+             res.redirect('/restaurants')
          })
          .catch(function(err){
              res.send(err)
@@ -34,19 +35,32 @@ router.get('/:id', function(req,res){
     console.log(id);
     db.Restaurant.findById(id)
         .then(function(restaurant){
-            res.json(restaurant);
+            res.render('show',{restaurant:restaurant});
         })
         .catch(function(err){
             res.send(err)
         })
 });
 
+//edit page
+router.get('/:id/edit', function(req,res){
+    db.Restaurant.findById(req.params.id)
+        .then(function(restaurant){
+            res.render('edit',{restaurant: restaurant})
+        })
+        .catch(function (err) {
+            console.log(err)
+            })
+
+});
+
+
+
 // update route
 router.put('/:id' ,function(req,res){
-
-    db.Restaurant.findByIdAndUpdate({_id: req.params.id}, req.body)
+    db.Restaurant.findByIdAndUpdate({_id: req.params.id}, req.body.restaurant)
         .then(function(restaurant){
-            res.json(restaurant);
+            res.redirect('/restaurants/'+ restaurant._id);
         })
         .catch(function(err){
             res.send(err)
@@ -54,14 +68,15 @@ router.put('/:id' ,function(req,res){
 
 });
 // delete
+
 router.delete('/:id', function(req,res){
-    db.Restaurant.remove({_id : req.params.id})
+    db.Restaurant.remove({_id: req.params.id})
         .then(function(){
-            res.send("deleted");
-        })
+            res.redirect("/restaurants");
+            })
         .catch(function(err){
             res.send(err)
-        })
+        });
 
 });
 

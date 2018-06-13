@@ -1,0 +1,8 @@
+<li>
+<%= restaurant.name%> - <%= restaurant.description%>
+<a href="/restaurants/<%=restaurant._id%>/edit">Edit</a>
+
+    <form action="/restaurants/<%=restaurant._id%>/?_method=DELETE"  method="POST">
+    <button type="submit">Delete</button>
+    </form>
+</li>

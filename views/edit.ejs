@@ -1,0 +1,6 @@
+<%= restaurant.name%>
+<form action="/restaurants/<%=restaurant._id%>?_method=PUT" method="post" >
+    <input name="restaurant[name]" value="<%=restaurant.name%>">
+    <input name="restaurant[description]" value="<%=restaurant.description%>">
+    <button type="submit">Update </button>
+</form>
