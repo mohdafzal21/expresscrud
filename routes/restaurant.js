@@ -1,6 +1,50 @@
 const express = require('express');
 const router = express.Router();
+  const  passport              = require("passport");
+   const bodyParser            = require("body-parser");
+   const LocalStrategy         = require("passport-local");
+    const passportLocalMongoose = require("passport-local-mongoose");
 const db = require('../models');
+
+// register
+router.get('/register', (req,res)=>{
+    res.render(register)
+});
+
+//login
+router.get('/login', function(req,res){
+    res.render(login)
+});
+
+// handling user signup
+router.post("/register", function(req, res){
+
+    db.User.register(new User({username: req.body.username}), req.body.password, function(err, user){
+        if(err){
+            console.log(err);
+            return res.render('register');
+        }
+        passport.authenticate("local")(req, res, function(){
+            res.redirect("/restaurants");
+        });
+    });
+});
+//login logic
+//middleware
+router.post("/login",passport.authenticate("local",
+    { successRedirect: '/secret',
+        failureRedirect: '/login',
+    }) ,
+    function(req, res){
+    });
+
+router.get("/logout", function(req, res){
+    req.logout();
+    res.redirect("/restaurants");
+});
+
+
+//////////////////////////
 
 router.get('/form', function(req,res){
    // show user form to create a new restaurant
@@ -17,6 +61,20 @@ router.get('/', function(req,res){
         })
 
 });
+
+router.get('/list', function(req,res){
+    db.Restaurant.find()
+        .then(function(restaurant){
+            res.json( restaurant);
+        })
+        .catch(function(err){
+            console.log(err);
+        })
+
+});
+
+
+
 
 router.post('/', function(req,res){
     db.Restaurant.create(req.body)
@@ -79,6 +137,15 @@ router.delete('/:id', function(req,res){
         });
 
 });
+
+
+exports.isLoggedIn =
+    function isLoggedIn(req, res, next){
+        if(req.isAuthenticated()){
+            return next();
+        }
+        res.redirect("/login");
+    }
 
 
 

@@ -5,5 +5,6 @@ mongoose.Promise = Promise;
 
 
 module.exports.Restaurant = require('./restaurant');
+module.exports.User = require('./user');
 
 

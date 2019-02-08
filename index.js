@@ -18,15 +18,15 @@ app.use(express.static(__dirname + '/public'));
 
 //set view engine
 app.set('view engine', 'ejs');
-
-// home route
-app.get('/', function(req,res){
-  res.send('home');
-});
-
+//
+// // home route
+// app.get('/', function(req,res){
+//   res.send('home');
+// });
+var multerroutes = require('./routes/multer')
 /// api routes
 app.use('/restaurants', restaurantRoutes);
-
+app.use('/', multerroutes);
 
 
 
